@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fcfcfd;
+  --foreground: #111827;
+  --pastel-primary: #a7f0ba;
+  --pastel-primary-hover: #8ee8a7;
+  --pastel-secondary: #d8dafe;
+  --pastel-secondary-hover: #c9ccfc;
+  --pastel-accent: #ffd6e7;
+  --pastel-panel: #ffffff;
+  --pastel-danger: #ef4444;
+  --pastel-danger-hover: #dc2626;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-pastel-primary: var(--pastel-primary);
+  --color-pastel-primary-hover: var(--pastel-primary-hover);
+  --color-pastel-secondary: var(--pastel-secondary);
+  --color-pastel-secondary-hover: var(--pastel-secondary-hover);
+  --color-pastel-accent: var(--pastel-accent);
+  --color-pastel-panel: var(--pastel-panel);
+  --color-pastel-danger: var(--pastel-danger);
+  --color-pastel-danger-hover: var(--pastel-danger-hover);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b0c10;
+    --foreground: #e5e7eb;
+    --pastel-primary: #4ade80;
+    --pastel-primary-hover: #22c55e;
+    --pastel-secondary: #818cf8;
+    --pastel-secondary-hover: #6366f1;
+    --pastel-accent: #fb7185;
+    --pastel-panel: #0f141c;
+    --pastel-danger: #ef4444;
+    --pastel-danger-hover: #dc2626;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+}
