@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { LoginPayload, RegisterPayload, UserProfile, UserRole, getCurrentUser, login as apiLogin, register as apiRegister, tokenStorage, refreshTokenStorage, API_BASE_URL } from "@/lib/api";
+import { LoginPayload, RegisterPayload, UserProfile, UserRole, getCurrentUser, login as apiLogin, register as apiRegister, tokenStorage, refreshTokenStorage, API_BASE_URL, setLogoutCallback } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 interface AuthContextState {
@@ -87,6 +87,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     router.replace("/login");
   }, [router]);
+
+  // Add this useEffect to set the logout callback
+  useEffect(() => {
+    setLogoutCallback(logout);
+    return () => {
+      setLogoutCallback(() => {}); // Clean up on unmount
+    };
+  }, [logout]);
 
   const refreshUser = useCallback(async () => {
     if (!tokenStorage.get()) return;

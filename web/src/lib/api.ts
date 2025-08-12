@@ -55,6 +55,13 @@ export interface UpdateProfilePayload {
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
 
+// Moved these to the top level
+let logoutCallback: (() => void) | null = null;
+
+export const setLogoutCallback = (callback: () => void) => {
+  logoutCallback = callback;
+};
+
 let isRefreshing = false;
 let refreshQueue: Array<() => void> = [];
 
@@ -96,6 +103,9 @@ const createApiClient = (getToken: () => string | null): AxiosInstance => {
         } catch (e) {
           tokenStorage.clear();
           refreshTokenStorage.clear();
+          if (logoutCallback) {
+            logoutCallback(); // Call the logout function provided by AuthContext
+          }
           throw e;
         } finally {
           isRefreshing = false;
@@ -143,7 +153,7 @@ export const refreshTokenStorage = {
 
 export const api = createApiClient(() => tokenStorage.get());
 
-export async function login(payload: LoginPayload): Promise<{ token: string; refreshToken?: string }>{
+export async function login(payload: LoginPayload): Promise<{ token: string; refreshToken?: string }> {
   try {
     const { data } = await axios.post(`${API_BASE_URL}/auth/login`, payload);
     return data;
@@ -183,8 +193,7 @@ export async function updateProfile(
   }
 }
 
-export async function uploadAvatar(file: File): Promise<{ avatarUrl: string }>
-{
+export async function uploadAvatar(file: File): Promise<{ avatarUrl: string }> {
   try {
     const formData = new FormData();
     formData.append("file", file);
@@ -197,7 +206,7 @@ export async function uploadAvatar(file: File): Promise<{ avatarUrl: string }>
   }
 }
 
-export async function refreshToken(): Promise<{ token: string }>{
+export async function refreshToken(): Promise<{ token: string }> {
   try {
     const refresh = refreshTokenStorage.get();
     const { data } = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken: refresh });
@@ -253,7 +262,7 @@ export async function updateUser(userId: string, payload: UpdateUserPayload): Pr
   }
 }
 
-export async function deleteUser(userId: string): Promise<{ success: boolean }>{
+export async function deleteUser(userId: string): Promise<{ success: boolean }> {
   try {
     const { data } = await api.delete(`/users/${userId}`);
     return data;
@@ -297,7 +306,7 @@ export async function updateApp(appId: string, payload: { name?: string; descrip
   }
 }
 
-export async function deleteApp(appId: string): Promise<{ success: boolean }>{
+export async function deleteApp(appId: string): Promise<{ success: boolean }> {
   try {
     const { data } = await api.delete(`/apps/${appId}`);
     return data;
@@ -306,7 +315,7 @@ export async function deleteApp(appId: string): Promise<{ success: boolean }>{
   }
 }
 
-export async function assignAppToUserByEmail(appId: string, email: string): Promise<{ success: boolean }>{
+export async function assignAppToUserByEmail(appId: string, email: string): Promise<{ success: boolean }> {
   try {
     const { data } = await api.post(`/apps/${appId}/assign`, { email });
     return data;
@@ -349,7 +358,7 @@ export async function updateTenant(id: string | number, payload: { name: string 
   }
 }
 
-export async function deleteTenant(id: string | number): Promise<{ success: boolean }>{
+export async function deleteTenant(id: string | number): Promise<{ success: boolean }> {
   try {
     const { data } = await api.delete(`/tenants/${id}`);
     return data;
@@ -371,4 +380,3 @@ export function normalizeError(error: unknown): ApiErrorShape {
   }
   return { message: "Unknown error" };
 }
-

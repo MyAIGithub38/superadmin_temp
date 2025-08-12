@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Form from "@/components/ui/Form";
 import Input from "@/components/ui/Input";
-import { createUser, deleteUser, getUsers, updateUser, type UserProfile, API_BASE_URL } from "@/lib/api";
+import { createUser, deleteUser, getUsers, updateUser, type UserProfile, API_BASE_URL, CreateUserPayload } from "@/lib/api"; // Added CreateUserPayload
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -123,4 +123,3 @@ export default function AdminUsersPage() {
     </RoleGuard>
   );
 }
-
